@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
+	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/app"
 )
 
 func main() {
-	d, err := data.Load()
+	a, err := app.New()
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 
-	fmt.Println(d[0])
+	a.Run()
 }
