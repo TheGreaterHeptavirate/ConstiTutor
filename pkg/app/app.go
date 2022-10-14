@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/AllenDang/giu"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
+	"golang.org/x/image/colornames"
+	"strings"
 )
 
 const (
@@ -17,6 +19,7 @@ type App struct {
 	data   []*data.LegalAct
 
 	searchPhrase string
+	rows         []*giu.TableRowWidget
 }
 
 func New() (*App, error) {
@@ -28,11 +31,13 @@ func New() (*App, error) {
 	return &App{
 		data:   d,
 		window: giu.NewMasterWindow(windowTitle, resolutionX, resolutionY, 0),
+		rows:   make([]*giu.TableRowWidget, 0),
 	}, nil
 }
 
 func (a *App) Run() {
 	// initialization
+	a.research("")
 
 	// run render loop
 	a.window.Run(a.render)
@@ -50,12 +55,45 @@ func (a *App) renderMainView() {
 	spacingW, _ := giu.GetItemSpacing()
 	giu.Layout{
 		giu.Row(
-			giu.InputText(&a.searchPhrase).Size(availableW-searchButtonW-spacingW),
+			giu.InputText(&a.searchPhrase).Size(availableW-searchButtonW-spacingW).OnChange(func() {
+				a.research(a.searchPhrase)
+			}),
 			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
-
+				a.research(a.searchPhrase)
 			}),
 		),
+		giu.Label(""),
+		giu.Condition(len(a.rows) > 0,
+			giu.Layout{
+				giu.Table().
+					Columns(
+						giu.TableColumn("Paragraf"),
+						giu.TableColumn("Treść"),
+					).
+					Rows(a.rows...),
+			},
+			giu.Layout{
+				giu.Style().SetColor(giu.StyleColorText, colornames.Gray).To(
+					giu.Label("Brak wyników..."),
+				),
+			},
+		),
 	}.Build()
+}
+
+func (a *App) research(phrase string) {
+	a.rows = make([]*giu.TableRowWidget, 0)
+
+	for _, act := range a.data {
+		for _, rule := range act.Rules {
+			if phrase == "" || strings.Contains(rule.Text, phrase) {
+				a.rows = append(a.rows, giu.TableRow(
+					giu.Label(act.ActName+" "+rule.Identifier),
+					giu.Label(rule.Text),
+				))
+			}
+		}
+	}
 }
 
 func (a *App) getMenubar() *giu.MenuBarWidget {
