@@ -6,28 +6,39 @@ import (
 )
 
 func Load() ([]*LegalAct, error) {
+	return loadDir(".")
+}
+
+func loadDir(dirname string) ([]*LegalAct, error) {
 	result := make([]*LegalAct, 0)
-	files, err := data.ReadDir(".")
+	files, err := data.ReadDir(dirname)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, file := range files {
 		if file.IsDir() {
+			dataFromDir, err := loadDir(filepath.Join(dirname, file.Name()))
+			if err != nil {
+				return nil, err
+			}
+
+			result = append(result, dataFromDir...)
+
 			continue
 		}
 
-		if filepath.Ext(file.Name()) != "json" {
+		if filepath.Ext(file.Name()) != ".json" {
 			continue
 		}
 
-		fileData, err := data.ReadFile(file.Name())
+		fileData, err := data.ReadFile(filepath.Join(dirname, file.Name()))
 		if err != nil {
 			return nil, err
 		}
 
 		output := &LegalAct{}
-		err := json.Unmarshal(output, fileData)
+		err = json.Unmarshal(fileData, output)
 		if err != nil {
 			return nil, err
 		}

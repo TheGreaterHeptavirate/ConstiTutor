@@ -1,0 +1,12 @@
+{
+        "ActName": "Prawo Dżungli",
+        "Rules": [
+                {
+                        "Identifier": "Zasada 1",
+                        "Text": "Kto pierwszy, ten lepszy",
+                        "Links": [
+                                "https://pkg.go.dev"
+                        ]
+                }
+        ]
+}

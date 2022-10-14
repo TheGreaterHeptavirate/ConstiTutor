@@ -3,4 +3,4 @@ package data
 import "embed"
 
 //go:embed DATA
-var data *embed.FS
+var data embed.FS
