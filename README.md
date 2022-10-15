@@ -1,10 +1,13 @@
+<img style="align:center" src="internal/assets/icons/logo.png">
+
+ConstiTutor jest aplikacją, tworzoną do udziału w Ogólnopolskim konkursie
+programistycznym [Hack Heroes](https://hackheroes.pl/)
+
+Aplikacja służy do wyszukiwania interesującej użydkownika frazy w Konstytucji
+Rzeczypospolitej Polskiej oraz innych aktach prawnych.
+
+
 ## Design doc
-
-### INTRO
-
-_Obecnie troche słabo ze mną więć bardzo po krótce_
-
-Consti-Tutor - wyszukiwarka po ustawach prawnych Prawa Polskiego
 
 ### TASKLIST
 
@@ -14,32 +17,29 @@ JSON powinien wyglądać jakoś tak:
 
 ```json
 {
-        Act: "name of act, e.g. Konstytucja RP",
-        Paragraphs: [
+        "ActName": "Prawo Dżungli",
+        "Rules": [
                 {
-                        Index: "1", /* idk czy w jsonie inty są w cudzysłowiu? @garnn?
-                        Text: "text of the paragraph",
-                        Links: ["links", "to", "explainations", "e.g. youtube"],
+                        "Identifier": "Zasada 1",
+                        "Text": "Kto pierwszy, ten lepszy",
+                        "Links": [
+                                "https://pkg.go.dev"
+                        ]
                 }
-                ...
-        ],
+        ]
 }
 ```
 
-to może być w pythonie zrobione, tylko żeby miało jeden format
+to może być zrobione w dowolnym języku (np. python) - liczy się format.
+Skrypt, jeżeli nie da się zintegrować z GO umieścić w folderze `scripts/`
 
-- [ ] system inputuów (pkg/core/input)
+- [X] system wejścia (pkg/core/data)
 
 konwerter jsona do GO
 
-- [ ] Backend - (zgodnie z [nieoficialną konwencją GO](https://github.com/golang-standards/project-layout): folder pkg/), polecam `pkg/core`
+- [X] UI
 
-główny system wyszukiwania e.t.c.
+Użycie frameworku [giu](https://github.com/AllenDang/giu).
+Można rozważyć [fyne](https://fyne.io), gdyż jest kompatybilna z androidem.
 
-- [ ] UI
-
-może być giu, ale można przetestować coś nowego i użyć [fyne](https://github.com/fyne-io/fyne)
-wtedy będziemy mogli łątwo portować na androida (łatwo = `GOOS="android" GOARCH="arm" go build`)
-w zależności od czasu
-
-(trzeba zrobić design UI @sirthunderek @TomaszDyrka)
+**UWAGA!** Stosujemy [nieoficialną konwencją struktury projektu GO](https://github.com/golang-standards/project-layout)!
