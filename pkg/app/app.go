@@ -29,6 +29,12 @@ type App struct {
 		w, h    int
 		texture *giu.Texture
 	}
+
+	searchOptions struct {
+		actNames   bool
+		paragraphs bool
+		text       bool
+	}
 }
 
 func New() (*App, error) {
@@ -102,6 +108,11 @@ func (a *App) renderMainView() {
 			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
 				a.Research(a.searchPhrase)
 			}),
+		),
+		giu.Row(
+			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames),
+			giu.Checkbox("W paragrafach", &a.searchOptions.paragraphs),
+			giu.Checkbox("W treści", &a.searchOptions.text),
 		),
 		giu.Label(""),
 		giu.Condition(len(a.rows) > 0,

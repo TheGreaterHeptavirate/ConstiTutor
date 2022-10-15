@@ -16,7 +16,25 @@ func (a *App) Research(phrase string) {
 	}
 
 	a.rows = make([]*giu.TableRowWidget, 0)
-	src := search(a.data)
+	//src := search(a.data)
+	src := make([]string, 0)
+	for _, act := range a.data {
+		for _, rule := range act.Rules {
+			new := ""
+			if a.searchOptions.actNames {
+				new += act.ActName + " "
+			}
+			if a.searchOptions.paragraphs {
+				new += rule.Identifier + " "
+			}
+
+			if a.searchOptions.text {
+				new += rule.Text + " "
+			}
+
+			src = append(src, new)
+		}
+	}
 
 	if phrase == "" {
 		for _, act := range a.data {
@@ -28,42 +46,20 @@ func (a *App) Research(phrase string) {
 		}
 	}
 
-	match := fuzzy.FindFrom(phrase, src)
+	match := fuzzy.Find(phrase, src)
 	for _, m := range match {
-		actName, rule := src.get(m.Index)
+		actName, rule := a.getRuleFromIndex(m.Index)
 		a.addRow(actName, rule)
 	}
 }
 
-type search []*data.LegalAct
-
-func (s search) String(i int) string {
-	for current := 0; ; {
-		if i < len((s)[current].Rules) {
-			return (s)[current].ActName + " " + s[current].Rules[i].Identifier + " " + s[current].Rules[i].Text
+func (a *App) getRuleFromIndex(i int) (actName string, rule *data.Rule) {
+	for currentAct := 0; ; {
+		if i < len(a.data[currentAct].Rules) {
+			return a.data[currentAct].ActName, &a.data[currentAct].Rules[i]
 		}
 
-		i -= len((s)[current].Rules)
-		current++
+		i -= len(a.data[currentAct].Rules)
+		currentAct++
 	}
-}
-
-func (s search) get(i int) (actName string, rule *data.Rule) {
-	for current := 0; ; {
-		if i < len((s)[current].Rules) {
-			return s[current].ActName, &s[current].Rules[i]
-		}
-
-		i -= len((s)[current].Rules)
-		current++
-	}
-}
-
-func (s search) Len() int {
-	var l int
-	for _, act := range s {
-		l += len(act.Rules)
-	}
-
-	return l
 }
