@@ -16,12 +16,9 @@ import (
 const (
 	windowTitle              = "Consti Tutor"
 	resolutionX, resolutionY = 800, 600
-	searchButtonW            = 100
-)
-
-const (
-	logoHProcentage = 15
-	aboutUsText     = `
+	logoHProcentage          = 15
+	searchProcentage         = 80
+	aboutUsText              = `
 Consti Tutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
 
@@ -123,13 +120,16 @@ func (a *App) renderMainView() {
 		logoH = logoW * scale
 	}
 
+	searchFieldW := (availableW)*searchProcentage/100 - spacingW/2
+	searchButtonW := availableW - searchFieldW - spacingW/2
+
 	giu.Layout{
 		giu.Row(
 			giu.Dummy(dummyW, 0),
 			giu.Image(a.logo.texture).Size(logoW, float32(logoH)),
 		),
 		giu.Row(
-			giu.InputText(&a.searchPhrase).Size(availableW-searchButtonW-spacingW).OnChange(func() {
+			giu.InputText(&a.searchPhrase).Size(searchFieldW).OnChange(func() {
 				a.Research(a.searchPhrase)
 			}),
 			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
