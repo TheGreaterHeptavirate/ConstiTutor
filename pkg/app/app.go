@@ -159,6 +159,11 @@ func (s search) Len() int {
 }
 
 func (a *App) research(phrase string) {
+	// if the last character of phrase ar " " remove them (fuzzy search returns strange results)
+	for strings.HasSuffix(phrase, " ") {
+		phrase = phrase[:len(phrase)-1]
+	}
+
 	a.rows = make([]*giu.TableRowWidget, 0)
 	src := search(a.data)
 
