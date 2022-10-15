@@ -99,8 +99,6 @@ func (s search) String(i int) string {
 		i -= len((s)[current].Rules)
 		current++
 	}
-
-	panic("index out of range")
 }
 
 func (s search) get(i int) (actName string, rule *data.Rule) {
@@ -112,8 +110,6 @@ func (s search) get(i int) (actName string, rule *data.Rule) {
 		i -= len((s)[current].Rules)
 		current++
 	}
-
-	panic("index out of range")
 }
 
 func (s search) Len() int {
