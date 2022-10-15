@@ -1,8 +1,8 @@
-package style
+package assets
 
 import (
 	_ "embed"
 )
 
-//go:embed stylesheet.css
+//go:embed css/stylesheet.css
 var DefaultTheme []byte

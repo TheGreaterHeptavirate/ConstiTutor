@@ -2,11 +2,12 @@ package app
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/AllenDang/giu"
-	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/style"
+	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/assets"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
 	"golang.org/x/image/colornames"
-	"strings"
 )
 
 const (
@@ -38,7 +39,7 @@ func New() (*App, error) {
 
 func (a *App) Run() {
 	// initialization
-	if err := giu.ParseCSSStyleSheet(style.DefaultTheme); err != nil {
+	if err := giu.ParseCSSStyleSheet(assets.DefaultTheme); err != nil {
 		panic(err)
 	}
 
