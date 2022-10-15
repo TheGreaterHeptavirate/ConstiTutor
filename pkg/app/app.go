@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/AllenDang/giu"
+	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/style"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
 	"golang.org/x/image/colornames"
 	"strings"
@@ -37,6 +38,10 @@ func New() (*App, error) {
 
 func (a *App) Run() {
 	// initialization
+	if err := giu.ParseCSSStyleSheet(style.DefaultTheme); err != nil {
+		panic(err)
+	}
+
 	a.research("")
 
 	// run render loop
