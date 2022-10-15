@@ -1,8 +1,10 @@
 package app
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/sahilm/fuzzy"
+	"image/png"
 	"strings"
 
 	"github.com/AllenDang/giu"
@@ -23,6 +25,10 @@ type App struct {
 
 	searchPhrase string
 	rows         []*giu.TableRowWidget
+	logo         struct {
+		w, h    int
+		texture *giu.Texture
+	}
 }
 
 func New() (*App, error) {
@@ -46,6 +52,17 @@ func (a *App) Run() {
 
 	a.research("")
 
+	logo, err := png.Decode(bytes.NewReader(assets.Logo))
+	if err != nil {
+		panic(err)
+	}
+
+	giu.EnqueueNewTextureFromRgba(logo, func(t *giu.Texture) {
+		a.logo.texture = t
+	})
+
+	a.logo.w, a.logo.h = logo.Bounds().Dx(), logo.Bounds().Dy()
+
 	// run render loop
 	a.window.Run(a.render)
 }
@@ -60,7 +77,11 @@ func (a *App) render() {
 func (a *App) renderMainView() {
 	availableW, _ := giu.GetAvailableRegion()
 	spacingW, _ := giu.GetItemSpacing()
+	// calculate logo H
+	logoH := int(float32(a.logo.h) / float32(a.logo.w) * availableW)
+
 	giu.Layout{
+		giu.Image(a.logo.texture).Size(availableW, float32(logoH)),
 		giu.Row(
 			giu.InputText(&a.searchPhrase).Size(availableW-searchButtonW-spacingW).OnChange(func() {
 				a.research(a.searchPhrase)
