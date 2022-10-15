@@ -11,25 +11,21 @@ main {
         tab-color: white;
         table-header-background-color: white;
         modal-window-dim-background-color: white;
-
         color: red;
         border-color: red;
         checkmark-color: red;
         table-border-strong-color: red;
         table-border-light-color: red;
         separator-color: red
-
         frame-background-hovered-color: rgb(255,175,175);
         button-hovered-color: rgb(255,175,175);
         header-hovered-color: rgb(255,175,175);
         tab-hovered-color: rgb(255,175,175);
         scrollbar-grab-hovered-color: rgb(255,175,175);
-
         frame-background-active-color: rgb(230,175,175);
         button-active-color: rgb(230,175,175);
         header-active-color: rgb(230,175,175);
         tab-active-color: rgb(230,175,175);
-
         window-rounding:5;
         child-rounding: 20;
         popup-rounding: 12;
