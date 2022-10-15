@@ -19,6 +19,8 @@ const (
 	searchButtonW            = 100
 )
 
+const logoLeftRightSpacing = 200
+
 type App struct {
 	window *giu.MasterWindow
 	data   []*data.LegalAct
@@ -78,10 +80,14 @@ func (a *App) renderMainView() {
 	availableW, _ := giu.GetAvailableRegion()
 	spacingW, _ := giu.GetItemSpacing()
 	// calculate logo H
-	logoH := int(float32(a.logo.h) / float32(a.logo.w) * availableW)
+	logoW := availableW - 2*logoLeftRightSpacing - spacingW
+	logoH := int(float32(a.logo.h) / float32(a.logo.w) * logoW)
 
 	giu.Layout{
-		giu.Image(a.logo.texture).Size(availableW, float32(logoH)),
+		giu.Row(
+			giu.Dummy(logoLeftRightSpacing, 0),
+			giu.Image(a.logo.texture).Size(logoW, float32(logoH)),
+		),
 		giu.Row(
 			giu.InputText(&a.searchPhrase).Size(availableW-searchButtonW-spacingW).OnChange(func() {
 				a.research(a.searchPhrase)
