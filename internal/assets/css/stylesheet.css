@@ -17,6 +17,7 @@ main {
         checkmark-color: red;
         table-border-strong-color: red;
         table-border-light-color: red;
+        separator-color: red
 
         frame-background-hovered-color: rgb(255,175,175);
         button-hovered-color: rgb(255,175,175);
@@ -30,8 +31,8 @@ main {
 
         window-rounding:5;
         child-rounding: 20;
-        popup-rounding: 20;
-        frame-rounding: 100;
+        popup-rounding: 12;
+        frame-rounding: 20;
         scrollbar-rounding: 5;
         grab-rounding: 20;
         tab-rounding: 20;

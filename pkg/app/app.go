@@ -6,9 +6,11 @@ import (
 	"github.com/AllenDang/giu"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/assets"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
+	"github.com/pkg/browser"
 	"golang.org/x/image/colornames"
 	"image"
 	"image/png"
+	"log"
 )
 
 const (
@@ -27,6 +29,8 @@ Wersja: v1.0
 Autor: The Greater Heptavirate: programming lodge
 Oficialna strona projektu: https://github.com/TheGreaterHeptavirate/ConstiTutor
 `
+	projectURL = "https://github.com/TheGreaterHeptavirate/ConstiTutor"
+	bugURL     = "https://github.com/TheGreaterHeptavirate/ConstiTutor/issues/new"
 )
 
 type App struct {
@@ -162,6 +166,28 @@ func (a *App) getMenubar() *giu.MenuBarWidget {
 			giu.MenuItem("O programie").OnClick(func() {
 				giu.Msgbox("O programie", aboutUsText)
 			}),
+			giu.MenuItem("Zobacz na GitHubie").OnClick(func() {
+				if err := browser.OpenURL(projectURL); err != nil {
+					a.ReportError(err)
+				}
+			}),
+			giu.Separator(),
+			giu.MenuItem("Zgłoś błąd").OnClick(func() {
+				if err := browser.OpenURL(bugURL); err != nil {
+					a.ReportError(err)
+				}
+			}),
 		),
 	)
+}
+
+// ReportError prints an error to the log and shows a message box in App.
+func (a *App) ReportError(err error) {
+	text := "Wystąpił nieznany błąd"
+	if err != nil {
+		text = fmt.Sprintf("Wystąpił błąd: %s\nProsimy skontaktować się z nami poprzez menu Pomoc->Zgłoś Błąd", err)
+	}
+
+	giu.Msgbox("Wystąpił błąd!", text)
+	log.Print(err)
 }
