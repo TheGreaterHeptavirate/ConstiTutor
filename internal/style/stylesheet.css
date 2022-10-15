@@ -1,3 +1,15 @@
 main {
+        color: black;
         background-color: white;
+        child-background-color: white;
+        frame-background-color: white;
+        title-background-color: white;
+        menu-bar-background-color: white;
+        button-color: white;
+        button-hovered-color: red;
+        button-active-color: rgb(200,0,0);
+        border-color: red;
+        header-color: white;
+        tab-color: white;
+        table-header-background-color: white;
 }
