@@ -1,4 +1,5 @@
-<img style="align:center" src="internal/assets/icons/logo.png">
+<a href="https://hackheroes.pl"><img src="https://hackheroes.pl/img/rsz_hackheroes_logo.png"></a>
+<img src="internal/assets/icons/logo.png">
 
 ConstiTutor jest aplikacją, tworzoną do udziału w Ogólnopolskim konkursie
 programistycznym [Hack Heroes](https://hackheroes.pl/)
