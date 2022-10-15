@@ -50,7 +50,7 @@ func (a *App) Run() {
 		panic(err)
 	}
 
-	a.research("")
+	a.Research("")
 
 	// load/set tray icon
 	icon, err := png.Decode(bytes.NewReader(assets.TrayIcon))
@@ -97,10 +97,10 @@ func (a *App) renderMainView() {
 		),
 		giu.Row(
 			giu.InputText(&a.searchPhrase).Size(availableW-searchButtonW-spacingW).OnChange(func() {
-				a.research(a.searchPhrase)
+				a.Research(a.searchPhrase)
 			}),
 			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
-				a.research(a.searchPhrase)
+				a.Research(a.searchPhrase)
 			}),
 		),
 		giu.Label(""),
