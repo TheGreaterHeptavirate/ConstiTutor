@@ -1,4 +1,4 @@
-<p style="align-content:center">
+<p align="center">
 <a href="https://hackheroes.pl"><img src="https://hackheroes.pl/img/rsz_hackheroes_logo.png"></a>
 <img src="internal/assets/icons/logo.png">
 </p>
