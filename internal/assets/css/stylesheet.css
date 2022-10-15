@@ -23,6 +23,7 @@ main {
         button-hovered-color: rgb(255,175,175);
         header-hovered-color: rgb(255,175,175);
         tab-hovered-color: rgb(255,175,175);
+        scrollbar-grab-hovered-color: rgb(255,175,175);
 
         frame-background-active-color: rgb(230,175,175);
         button-active-color: rgb(230,175,175);
