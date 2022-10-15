@@ -7,5 +7,9 @@ import (
 //go:embed css/stylesheet.css
 var DefaultTheme []byte
 
-//go:embed icons/logo.png
-var Logo []byte
+var (
+	//go:embed icons/logo.png
+	Logo []byte
+	//go:embed icons/icon.png
+	TrayIcon []byte
+)

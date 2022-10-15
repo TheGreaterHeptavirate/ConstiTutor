@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/sahilm/fuzzy"
+	"image"
 	"image/png"
 	"strings"
 
@@ -54,6 +55,15 @@ func (a *App) Run() {
 
 	a.research("")
 
+	// load/set tray icon
+	icon, err := png.Decode(bytes.NewReader(assets.TrayIcon))
+	if err != nil {
+		panic(err)
+	}
+
+	a.window.SetIcon([]image.Image{icon})
+
+	// load logo image
 	logo, err := png.Decode(bytes.NewReader(assets.Logo))
 	if err != nil {
 		panic(err)
