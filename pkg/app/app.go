@@ -20,7 +20,7 @@ const (
 )
 
 const (
-	logoHProcentage = 20
+	logoHProcentage = 15
 	aboutUsText     = `
 Consti Tutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
