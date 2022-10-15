@@ -20,8 +20,8 @@ const (
 )
 
 const (
-	logoLeftRightSpacing = 200
-	aboutUsText          = `
+	logoHProcentage = 20
+	aboutUsText     = `
 Consti Tutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
 
@@ -105,15 +105,27 @@ func (a *App) render() {
 }
 
 func (a *App) renderMainView() {
-	availableW, _ := giu.GetAvailableRegion()
+	availableW, availableH := giu.GetAvailableRegion()
 	spacingW, _ := giu.GetItemSpacing()
-	// calculate logo H
-	logoW := availableW - 2*logoLeftRightSpacing - spacingW
-	logoH := int(float32(a.logo.h) / float32(a.logo.w) * logoW)
+	scale := float32(a.logo.h) / float32(a.logo.w)
+	maxLogoH := availableH * logoHProcentage / 100
+	maxLogoW := availableW
+	var logoW, logoH, dummyW float32
+	if maxLogoW >= maxLogoH/scale {
+		logoH = maxLogoH
+		logoW = logoH / scale
+		dummyW = (availableW-logoW)/2 - spacingW
+		if dummyW < 0 {
+			dummyW = 0
+		}
+	} else {
+		logoW = maxLogoW
+		logoH = logoW * scale
+	}
 
 	giu.Layout{
 		giu.Row(
-			giu.Dummy(logoLeftRightSpacing, 0),
+			giu.Dummy(dummyW, 0),
 			giu.Image(a.logo.texture).Size(logoW, float32(logoH)),
 		),
 		giu.Row(
