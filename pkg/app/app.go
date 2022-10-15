@@ -17,7 +17,17 @@ const (
 	searchButtonW            = 100
 )
 
-const logoLeftRightSpacing = 200
+const (
+	logoLeftRightSpacing = 200
+	aboutUsText          = `
+Consti Tutor to program służący do wyszukiwania interesujących Cię
+aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
+
+Wersja: v1.0
+Autor: The Greater Heptavirate: programming lodge
+Oficialna strona projektu: https://github.com/TheGreaterHeptavirate/ConstiTutor
+`
+)
 
 type App struct {
 	window *giu.MasterWindow
@@ -85,6 +95,7 @@ func (a *App) Run() {
 func (a *App) render() {
 	giu.SingleWindowWithMenuBar().Layout(
 		a.getMenubar(),
+		giu.PrepareMsgbox(),
 		giu.Custom(a.renderMainView),
 	)
 }
@@ -142,6 +153,15 @@ func (a *App) addRow(actName string, rule *data.Rule) {
 
 func (a *App) getMenubar() *giu.MenuBarWidget {
 	return giu.MenuBar().Layout(
-		giu.Menu("Plik").Layout(),
+		giu.Menu("Plik").Layout(
+			giu.MenuItem("Zamknij").OnClick(func() {
+				a.window.Close()
+			}),
+		),
+		giu.Menu("Pomoc").Layout(
+			giu.MenuItem("O programie").OnClick(func() {
+				giu.Msgbox("O programie", aboutUsText)
+			}),
+		),
 	)
 }
