@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/sahilm/fuzzy"
 	"strings"
 
 	"github.com/AllenDang/giu"
@@ -87,19 +88,69 @@ func (a *App) renderMainView() {
 	}.Build()
 }
 
+type search []*data.LegalAct
+
+func (s search) String(i int) string {
+	for current := 0; ; {
+		if i < len((s)[current].Rules) {
+			return (s)[current].ActName + " " + s[current].Rules[i].Identifier + " " + s[current].Rules[i].Text
+		}
+
+		i -= len((s)[current].Rules)
+		current++
+	}
+
+	panic("index out of range")
+}
+
+func (s search) get(i int) (actName string, rule *data.Rule) {
+	for current := 0; ; {
+		if i < len((s)[current].Rules) {
+			return s[current].ActName, &s[current].Rules[i]
+		}
+
+		i -= len((s)[current].Rules)
+		current++
+	}
+
+	panic("index out of range")
+}
+
+func (s search) Len() int {
+	var l int
+	for _, act := range s {
+		l += len(act.Rules)
+	}
+
+	return l
+}
+
 func (a *App) research(phrase string) {
 	a.rows = make([]*giu.TableRowWidget, 0)
+	src := search(a.data)
 
-	for _, act := range a.data {
-		for _, rule := range act.Rules {
-			if phrase == "" || strings.Contains(rule.Text, phrase) {
-				a.rows = append(a.rows, giu.TableRow(
-					giu.Label(act.ActName+" "+rule.Identifier),
-					giu.Label(rule.Text),
-				))
+	if phrase == "" {
+		for _, act := range a.data {
+			for _, rule := range act.Rules {
+				if phrase == "" || strings.Contains(rule.Text, phrase) {
+					a.addRow(act.ActName, &rule)
+				}
 			}
 		}
 	}
+
+	match := fuzzy.FindFrom(phrase, src)
+	for _, m := range match {
+		actName, rule := src.get(m.Index)
+		a.addRow(actName, rule)
+	}
+}
+
+func (a *App) addRow(actName string, rule *data.Rule) {
+	a.rows = append(a.rows, giu.TableRow(
+		giu.Label(actName+" "+rule.Identifier),
+		giu.Label(rule.Text),
+	))
 }
 
 func (a *App) getMenubar() *giu.MenuBarWidget {
