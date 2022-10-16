@@ -134,17 +134,19 @@ func (a *App) InitializeSound() error {
 	return nil
 }
 
-func (a *App) playClickSound() {
-	newPos, err := a.clickSound.(io.Seeker).Seek(0, io.SeekStart)
-	if err != nil {
-		a.ReportError(err)
-	}
+func (a *App) playClickSound() giu.Widget {
+	return giu.Event().OnMouseDown(giu.MouseButtonLeft, func() {
+		newPos, err := a.clickSound.(io.Seeker).Seek(0, io.SeekStart)
+		if err != nil {
+			a.ReportError(err)
+		}
 
-	if newPos != 0 {
-		a.ReportError(fmt.Errorf("failed to seek to the beginning of the click sound"))
-	}
+		if newPos != 0 {
+			a.ReportError(fmt.Errorf("failed to seek to the beginning of the click sound"))
+		}
 
-	a.clickSound.Play()
+		a.clickSound.Play()
+	})
 }
 
 func (a *App) registerShortcuts() {
@@ -198,14 +200,10 @@ func (a *App) render() {
 				),
 			giu.Separator(),
 			giu.Row(
-				giu.Button("Zgłoś błąd").OnClick(func() {
-					a.playClickSound()
-					a.reportBug()
-				}).Size(0, buttonH),
-				giu.Button("Zamknij").OnClick(func() {
-					a.playClickSound()
-					a.aboutAppPopup.Close()
-				}).Size(0, buttonH),
+				giu.Button("Zgłoś błąd").OnClick(a.reportBug).Size(0, buttonH),
+				a.playClickSound(),
+				giu.Button("Zamknij").OnClick(a.aboutAppPopup.Close).Size(0, buttonH),
+				a.playClickSound(),
 			),
 		),
 		giu.PrepareMsgbox(),
@@ -226,23 +224,23 @@ func (a *App) renderMainView() {
 				a.Research(a.searchPhrase)
 			}),
 			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
-				a.playClickSound()
 				a.Research(a.searchPhrase)
 			}),
+			a.playClickSound(),
 		),
 		giu.Row(
 			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames).OnChange(func() {
-				a.playClickSound()
 				a.Research(a.searchPhrase)
 			}),
+			a.playClickSound(),
 			giu.Checkbox("W paragrafach", &a.searchOptions.paragraphs).OnChange(func() {
-				a.playClickSound()
 				a.Research(a.searchPhrase)
 			}),
+			a.playClickSound(),
 			giu.Checkbox("W treści", &a.searchOptions.text).OnChange(func() {
-				a.playClickSound()
 				a.Research(a.searchPhrase)
 			}),
+			a.playClickSound(),
 		),
 		giu.Label(""),
 		giu.Condition(len(a.rows) > 0,
@@ -314,34 +312,24 @@ func (a *App) addRow(actName string, rule *data.Rule) {
 func (a *App) getMenubar() *giu.MenuBarWidget {
 	return giu.MenuBar().Layout(
 		giu.Menu("Plik").Layout(
-			giu.MenuItem("Zamknij").Shortcut("Ctrl+Q").OnClick(func() {
-				a.playClickSound()
-				a.window.Close()
-			}),
+			giu.MenuItem("Zamknij").Shortcut("Ctrl+Q").OnClick(a.window.Close),
+			a.playClickSound(),
 		),
-		giu.Event().OnClick(giu.MouseButtonLeft, func() {
-			a.playClickSound()
-		}),
+		a.playClickSound(),
 		giu.Menu("Pomoc").Layout(
-			giu.MenuItem("O programie").Shortcut("F1").OnClick(func() {
-				a.playClickSound()
-				a.aboutAppPopup.Open()
-			}),
+			giu.MenuItem("O programie").Shortcut("F1").OnClick(a.aboutAppPopup.Open),
+			a.playClickSound(),
 			giu.MenuItem("Zobacz na GitHubie").OnClick(func() {
-				a.playClickSound()
 				if err := browser.OpenURL(projectURL); err != nil {
 					a.ReportError(err)
 				}
 			}),
+			a.playClickSound(),
 			giu.Separator(),
-			giu.MenuItem("Zgłoś błąd").OnClick(func() {
-				a.playClickSound()
-				a.reportBug()
-			}),
+			giu.MenuItem("Zgłoś błąd").OnClick(a.reportBug),
+			a.playClickSound(),
 		),
-		giu.Event().OnClick(giu.MouseButtonLeft, func() {
-			a.playClickSound()
-		}),
+		a.playClickSound(),
 	)
 }
 
