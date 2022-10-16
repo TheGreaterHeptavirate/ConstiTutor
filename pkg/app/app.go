@@ -58,12 +58,16 @@ func New() (*App, error) {
 		return nil, fmt.Errorf("failed to initialize json data: %w", err)
 	}
 
-	return &App{
+	result := &App{
 		data:          d,
 		window:        giu.NewMasterWindow(windowTitle, resolutionX, resolutionY, 0),
 		rows:          make([]*giu.TableRowWidget, 0),
 		aboutAppPopup: NewPopupModal("O Aplikacji"),
-	}, nil
+	}
+
+	result.searchOptions.text = true
+
+	return result, nil
 }
 
 func (a *App) Run() {
