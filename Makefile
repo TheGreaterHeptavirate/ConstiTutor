@@ -40,8 +40,8 @@ setup:
 	@git submodule update --init --recursive
 	@$(GOCMD) get golang.org/x/tools/cmd/stringer
 	@$(GOCMD) install golang.org/x/tools/cmd/stringer
-	@$(GOCMD) get github.com/mewspring/tools/cmd/string2enum@latest
 	@$(GOCMD) install github.com/mewspring/tools/cmd/string2enum@latest
+	@$(GOCMD) install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@latest
 	@$(GOCMD) get -d ./...
 	@$(GOCMD) mod download -x
 	@$(GOCMD) generate -v ./...
