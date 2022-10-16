@@ -117,9 +117,15 @@ func (a *App) registerShortcuts() {
 			Key:      giu.KeyEscape,
 			Modifier: giu.ModNone,
 			Callback: func() {
-				//giu.CloseCurrentPopup()
+				giu.CloseCurrentPopup()
 				a.aboutAppPopup.Close()
 			},
+		},
+		// about app - F1
+		giu.WindowShortcut{
+			Key:      giu.KeyF1,
+			Modifier: giu.ModNone,
+			Callback: a.aboutAppPopup.Open,
 		},
 	)
 }
@@ -255,7 +261,7 @@ func (a *App) getMenubar() *giu.MenuBarWidget {
 			}),
 		),
 		giu.Menu("Pomoc").Layout(
-			giu.MenuItem("O programie").OnClick(func() {
+			giu.MenuItem("O programie").Shortcut("F1").OnClick(func() {
 				a.aboutAppPopup.Open()
 			}),
 			giu.MenuItem("Zobacz na GitHubie").OnClick(func() {
