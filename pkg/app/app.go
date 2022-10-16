@@ -144,12 +144,19 @@ func (a *App) renderMainView() {
 		giu.Label(""),
 		giu.Condition(len(a.rows) > 0,
 			giu.Layout{
-				giu.Table().
-					Columns(
-						giu.TableColumn("Paragraf"),
-						giu.TableColumn("Treść"),
+				giu.Child().Layout(
+					giu.Table().Flags(
+						giu.TableFlagsScrollY|
+							giu.TableFlagsResizable|
+							giu.TableFlagsBordersInner|
+							giu.TableFlagsBordersInnerH,
 					).
-					Rows(a.rows...),
+						Columns(
+							giu.TableColumn("Paragraf"),
+							giu.TableColumn("Treść"),
+						).
+						Rows(a.rows...),
+				),
 			},
 			giu.Layout{
 				giu.Style().SetColor(giu.StyleColorText, colornames.Gray).To(
