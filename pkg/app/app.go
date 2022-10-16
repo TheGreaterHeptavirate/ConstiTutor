@@ -72,6 +72,8 @@ func New() (*App, error) {
 
 func (a *App) Run() {
 	// initialization
+	a.registerShortcuts()
+
 	if err := giu.ParseCSSStyleSheet(assets.DefaultTheme); err != nil {
 		panic(err)
 	}
@@ -100,6 +102,26 @@ func (a *App) Run() {
 
 	// run render loop
 	a.window.Run(a.render)
+}
+
+func (a *App) registerShortcuts() {
+	a.window.RegisterKeyboardShortcuts(
+		// quit - Ctrl+Q
+		giu.WindowShortcut{
+			Key:      giu.KeyQ,
+			Modifier: giu.ModControl,
+			Callback: a.window.Close,
+		},
+		// close popup - Esc
+		giu.WindowShortcut{
+			Key:      giu.KeyEscape,
+			Modifier: giu.ModNone,
+			Callback: func() {
+				//giu.CloseCurrentPopup()
+				a.aboutAppPopup.Close()
+			},
+		},
+	)
 }
 
 func (a *App) render() {
@@ -228,7 +250,7 @@ func (a *App) addRow(actName string, rule *data.Rule) {
 func (a *App) getMenubar() *giu.MenuBarWidget {
 	return giu.MenuBar().Layout(
 		giu.Menu("Plik").Layout(
-			giu.MenuItem("Zamknij").OnClick(func() {
+			giu.MenuItem("Zamknij").Shortcut("Ctrl+Q").OnClick(func() {
 				a.window.Close()
 			}),
 		),

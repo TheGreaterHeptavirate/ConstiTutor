@@ -1,35 +1,30 @@
 package app
 
-import "github.com/AllenDang/giu"
+import (
+	"github.com/AllenDang/giu"
+)
 
 type PopupModal struct {
-	id         string
-	popup      *giu.PopupModalWidget
-	isOpen     bool
-	shouldOpen bool
+	id          string
+	popup       *giu.PopupModalWidget
+	isOpenInGiu bool
+	isOpen      bool
 }
 
 func NewPopupModal(id string) *PopupModal {
 	return &PopupModal{
-		id:         id,
-		popup:      giu.PopupModal(id),
-		isOpen:     false,
-		shouldOpen: false,
+		id:     id,
+		popup:  giu.PopupModal(id),
+		isOpen: false,
 	}
 }
 
 func (p *PopupModal) Open() {
-	if !p.isOpen {
-		p.shouldOpen = true
-	}
+	p.isOpen = true
 }
 
 func (p *PopupModal) Close() {
-	if p.isOpen {
-		p.isOpen = false
-		p.shouldOpen = false
-		giu.CloseCurrentPopup()
-	}
+	p.isOpen = false
 }
 
 func (p *PopupModal) Layout(l ...giu.Widget) *PopupModal {
@@ -38,11 +33,13 @@ func (p *PopupModal) Layout(l ...giu.Widget) *PopupModal {
 }
 
 func (p *PopupModal) Build() {
-	if p.shouldOpen {
-		p.isOpen = true
-		p.shouldOpen = false
-		giu.OpenPopup(p.id)
+	if !p.isOpen {
+		return
 	}
 
-	p.popup.Build()
+	p.popup.IsOpen(&p.isOpen).Build()
+
+	if !p.isOpenInGiu {
+		giu.OpenPopup(p.id)
+	}
 }
