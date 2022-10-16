@@ -306,23 +306,33 @@ func (a *App) getMenubar() *giu.MenuBarWidget {
 	return giu.MenuBar().Layout(
 		giu.Menu("Plik").Layout(
 			giu.MenuItem("Zamknij").Shortcut("Ctrl+Q").OnClick(func() {
+				a.playClickSound()
 				a.window.Close()
 			}),
 		),
+		giu.Event().OnClick(giu.MouseButtonLeft, func() {
+			a.playClickSound()
+		}),
 		giu.Menu("Pomoc").Layout(
 			giu.MenuItem("O programie").Shortcut("F1").OnClick(func() {
+				a.playClickSound()
 				a.aboutAppPopup.Open()
 			}),
 			giu.MenuItem("Zobacz na GitHubie").OnClick(func() {
+				a.playClickSound()
 				if err := browser.OpenURL(projectURL); err != nil {
 					a.ReportError(err)
 				}
 			}),
 			giu.Separator(),
 			giu.MenuItem("Zgłoś błąd").OnClick(func() {
+				a.playClickSound()
 				a.reportBug()
 			}),
 		),
+		giu.Event().OnClick(giu.MouseButtonLeft, func() {
+			a.playClickSound()
+		}),
 	)
 }
 
