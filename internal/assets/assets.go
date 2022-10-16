@@ -13,3 +13,7 @@ var (
 	//go:embed icons/icon.png
 	TrayIcon []byte
 )
+
+// sounds
+//go:embed sounds/click.mp3
+var ClickSound []byte

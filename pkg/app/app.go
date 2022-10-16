@@ -3,18 +3,27 @@ package app
 import (
 	"bytes"
 	"fmt"
-	"github.com/AllenDang/giu"
-	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/assets"
-	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
-	"github.com/pkg/browser"
+	"github.com/hajimehoshi/oto/v2"
 	"golang.org/x/image/colornames"
 	"image"
 	"image/color"
 	"image/png"
+	"io"
 	"log"
+	"runtime"
+
+	"github.com/AllenDang/giu"
+	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/assets"
+	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
+	"github.com/hajimehoshi/go-mp3"
+	"github.com/pkg/browser"
 )
 
 const (
+	sampleRate      = 4800
+	channelCount    = 2
+	bitDepthInBytes = 2
+
 	windowTitle              = "Consti Tutor"
 	resolutionX, resolutionY = 800, 600
 	logoHProcentage          = 15
@@ -50,6 +59,7 @@ type App struct {
 	}
 
 	aboutAppPopup *PopupModal
+	clickSound    oto.Player
 }
 
 func New() (*App, error) {
@@ -72,6 +82,7 @@ func New() (*App, error) {
 
 func (a *App) Run() {
 	// initialization
+	a.InitializeSound()
 	a.registerShortcuts()
 
 	if err := giu.ParseCSSStyleSheet(assets.DefaultTheme); err != nil {
@@ -102,6 +113,38 @@ func (a *App) Run() {
 
 	// run render loop
 	a.window.Run(a.render)
+}
+
+func (a *App) InitializeSound() error {
+	mp3Data, err := mp3.NewDecoder(bytes.NewReader(assets.ClickSound))
+	if err != nil {
+		return err
+	}
+
+	c, ready, err := oto.NewContext(mp3Data.SampleRate(), channelCount, bitDepthInBytes)
+	if err != nil {
+		return err
+	}
+
+	<-ready
+
+	a.clickSound = c.NewPlayer(mp3Data)
+	runtime.KeepAlive(a.clickSound)
+
+	return nil
+}
+
+func (a *App) playClickSound() {
+	newPos, err := a.clickSound.(io.Seeker).Seek(0, io.SeekStart)
+	if err != nil {
+		a.ReportError(err)
+	}
+
+	if newPos != 0 {
+		a.ReportError(fmt.Errorf("failed to seek to the beginning of the click sound"))
+	}
+
+	a.clickSound.Play()
 }
 
 func (a *App) registerShortcuts() {
@@ -155,8 +198,14 @@ func (a *App) render() {
 				),
 			giu.Separator(),
 			giu.Row(
-				giu.Button("Zgłoś błąd").OnClick(a.reportBug).Size(0, buttonH),
-				giu.Button("Zamknij").OnClick(a.aboutAppPopup.Close).Size(0, buttonH),
+				giu.Button("Zgłoś błąd").OnClick(func() {
+					a.playClickSound()
+					a.reportBug()
+				}).Size(0, buttonH),
+				giu.Button("Zamknij").OnClick(func() {
+					a.playClickSound()
+					a.aboutAppPopup.Close()
+				}).Size(0, buttonH),
 			),
 		),
 		giu.PrepareMsgbox(),
@@ -177,13 +226,14 @@ func (a *App) renderMainView() {
 				a.Research(a.searchPhrase)
 			}),
 			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
+				a.playClickSound()
 				a.Research(a.searchPhrase)
 			}),
 		),
 		giu.Row(
-			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames),
-			giu.Checkbox("W paragrafach", &a.searchOptions.paragraphs),
-			giu.Checkbox("W treści", &a.searchOptions.text),
+			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames).OnChange(a.playClickSound),
+			giu.Checkbox("W paragrafach", &a.searchOptions.paragraphs).OnChange(a.playClickSound),
+			giu.Checkbox("W treści", &a.searchOptions.text).OnChange(a.playClickSound),
 		),
 		giu.Label(""),
 		giu.Condition(len(a.rows) > 0,
@@ -191,7 +241,6 @@ func (a *App) renderMainView() {
 				giu.Child().Layout(
 					giu.Table().Flags(
 						giu.TableFlagsScrollY|
-							//giu.TableFlagsResizable|
 							giu.TableFlagsBordersInner|
 							giu.TableFlagsBordersInnerH,
 					).
