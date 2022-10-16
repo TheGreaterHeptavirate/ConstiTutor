@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"path/filepath"
+	"strings"
 )
 
 func Load() ([]*LegalAct, error) {
@@ -18,7 +19,7 @@ func loadDir(dirname string) ([]*LegalAct, error) {
 
 	for _, file := range files {
 		if file.IsDir() {
-			dataFromDir, err := loadDir(filepath.Join(dirname, file.Name()))
+			dataFromDir, err := loadDir(joinPath(dirname, file.Name()))
 			if err != nil {
 				return nil, err
 			}
@@ -32,7 +33,7 @@ func loadDir(dirname string) ([]*LegalAct, error) {
 			continue
 		}
 
-		fileData, err := data.ReadFile(filepath.Join(dirname, file.Name()))
+		fileData, err := data.ReadFile(joinPath(dirname, file.Name()))
 		if err != nil {
 			return nil, err
 		}
@@ -68,4 +69,8 @@ type Rule struct {
 
 	// Links is a list to external resources. e.g. YouTube desctiption e.t.c.
 	Links []string
+}
+
+func joinPath(path ...string) string {
+	return strings.ReplaceAll(filepath.Join(path...), "\\", "/")
 }
