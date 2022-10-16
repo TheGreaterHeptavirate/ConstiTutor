@@ -8,7 +8,7 @@ import (
 var DefaultTheme []byte
 
 var (
-	//go:embed icons/logo.png
+	//go:embed icons/1.png
 	Logo []byte
 	//go:embed icons/icon.png
 	TrayIcon []byte
