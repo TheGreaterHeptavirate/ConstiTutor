@@ -147,12 +147,14 @@ func (a *App) renderMainView() {
 				giu.Child().Layout(
 					giu.Table().Flags(
 						giu.TableFlagsScrollY|
-							giu.TableFlagsResizable|
+							//giu.TableFlagsResizable|
 							giu.TableFlagsBordersInner|
 							giu.TableFlagsBordersInnerH,
 					).
 						Columns(
-							giu.TableColumn("Paragraf"),
+							giu.TableColumn("Paragraf").
+								Flags(giu.TableColumnFlagsWidthStretch).
+								InnerWidthOrWeight(.3),
 							giu.TableColumn("Treść"),
 						).
 						Rows(a.rows...),
