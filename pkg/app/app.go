@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/browser"
 	"golang.org/x/image/colornames"
 	"image"
+	"image/color"
 	"image/png"
 	"log"
 )
@@ -19,15 +20,16 @@ const (
 	logoHProcentage          = 15
 	searchProcentage         = 80
 	aboutUsText              = `
-Consti Tutor to program służący do wyszukiwania interesujących Cię
+ConstiTutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
 
 Wersja: v1.0
-Autor: The Greater Heptavirate: programming lodge
-Oficialna strona projektu: https://github.com/TheGreaterHeptavirate/ConstiTutor
+Autor: [The Greater Heptavirate: programming lodge](https://github.com/TheGreaterHeptavirate)
+[Oficialna strona projektu](https://github.com/TheGreaterHeptavirate/ConstiTutor)
 `
 	projectURL = "https://github.com/TheGreaterHeptavirate/ConstiTutor"
 	bugURL     = "https://github.com/TheGreaterHeptavirate/ConstiTutor/issues/new"
+	buttonH    = 30
 )
 
 type App struct {
@@ -46,6 +48,8 @@ type App struct {
 		paragraphs bool
 		text       bool
 	}
+
+	aboutAppPopup *PopupModal
 }
 
 func New() (*App, error) {
@@ -55,9 +59,10 @@ func New() (*App, error) {
 	}
 
 	return &App{
-		data:   d,
-		window: giu.NewMasterWindow(windowTitle, resolutionX, resolutionY, 0),
-		rows:   make([]*giu.TableRowWidget, 0),
+		data:          d,
+		window:        giu.NewMasterWindow(windowTitle, resolutionX, resolutionY, 0),
+		rows:          make([]*giu.TableRowWidget, 0),
+		aboutAppPopup: NewPopupModal("O Aplikacji"),
 	}, nil
 }
 
@@ -94,40 +99,47 @@ func (a *App) Run() {
 }
 
 func (a *App) render() {
+	aboutUs := aboutUsText
 	giu.SingleWindowWithMenuBar().Layout(
 		a.getMenubar(),
+		giu.Custom(func() {
+			giu.SetNextWindowSize(700, 550)
+		}),
+		a.aboutAppPopup.Layout(
+			giu.Style().
+				SetColor(giu.StyleColorChildBg, color.RGBA{}).
+				SetColor(giu.StyleColorBorder, color.RGBA{}).
+				To(
+					giu.Custom(func() {
+						_, availableH := giu.GetAvailableRegion()
+						_, spacingH := giu.GetItemSpacing()
+						childH := availableH - spacingH*2 - buttonH
+
+						giu.Child().Layout(
+							a.renderLogo(40),
+							giu.Markdown(&aboutUs),
+						).Size(-1, childH).Build()
+					}),
+				),
+			giu.Separator(),
+			giu.Row(
+				giu.Button("Zgłoś błąd").OnClick(a.reportBug).Size(0, buttonH),
+				giu.Button("Zamknij").OnClick(a.aboutAppPopup.Close).Size(0, buttonH),
+			),
+		),
 		giu.PrepareMsgbox(),
 		giu.Custom(a.renderMainView),
 	)
 }
 
 func (a *App) renderMainView() {
-	availableW, availableH := giu.GetAvailableRegion()
+	availableW, _ := giu.GetAvailableRegion()
 	spacingW, _ := giu.GetItemSpacing()
-	scale := float32(a.logo.h) / float32(a.logo.w)
-	maxLogoH := availableH * logoHProcentage / 100
-	maxLogoW := availableW
-	var logoW, logoH, dummyW float32
-	if maxLogoW >= maxLogoH/scale {
-		logoH = maxLogoH
-		logoW = logoH / scale
-		dummyW = (availableW-logoW)/2 - spacingW
-		if dummyW < 0 {
-			dummyW = 0
-		}
-	} else {
-		logoW = maxLogoW
-		logoH = logoW * scale
-	}
-
 	searchFieldW := (availableW)*searchProcentage/100 - spacingW/2
 	searchButtonW := availableW - searchFieldW - spacingW/2
 
 	giu.Layout{
-		giu.Row(
-			giu.Dummy(dummyW, 0),
-			giu.Image(a.logo.texture).Size(logoW, float32(logoH)),
-		),
+		a.renderLogo(logoHProcentage),
 		giu.Row(
 			giu.InputText(&a.searchPhrase).Size(searchFieldW).OnChange(func() {
 				a.Research(a.searchPhrase)
@@ -169,6 +181,39 @@ func (a *App) renderMainView() {
 	}.Build()
 }
 
+func (a *App) renderLogo(procentage int) giu.Widget {
+	return giu.Custom(func() {
+		availableW, availableH := giu.GetAvailableRegion()
+		spacingW, _ := giu.GetItemSpacing()
+		scale := float32(a.logo.h) / float32(a.logo.w)
+		maxLogoH := availableH * float32(procentage) / 100
+		maxLogoW := availableW
+		var logoW, logoH, dummyW float32
+		if maxLogoW >= maxLogoH/scale {
+			logoH = maxLogoH
+			logoW = logoH / scale
+			dummyW = (availableW-logoW)/2 - spacingW
+			if dummyW < 0 {
+				dummyW = 0
+			}
+		} else {
+			logoW = maxLogoW
+			logoH = logoW * scale
+		}
+
+		giu.Row(
+			giu.Dummy(dummyW, 0),
+			giu.Image(a.logo.texture).Size(logoW, float32(logoH)),
+		).Build()
+	})
+}
+
+func (a *App) reportBug() {
+	if err := browser.OpenURL(bugURL); err != nil {
+		a.ReportError(err)
+	}
+}
+
 func (a *App) addRow(actName string, rule *data.Rule) {
 	a.rows = append(a.rows, giu.TableRow(
 		giu.Label(actName+" "+rule.Identifier),
@@ -185,7 +230,7 @@ func (a *App) getMenubar() *giu.MenuBarWidget {
 		),
 		giu.Menu("Pomoc").Layout(
 			giu.MenuItem("O programie").OnClick(func() {
-				giu.Msgbox("O programie", aboutUsText)
+				a.aboutAppPopup.Open()
 			}),
 			giu.MenuItem("Zobacz na GitHubie").OnClick(func() {
 				if err := browser.OpenURL(projectURL); err != nil {
@@ -194,9 +239,7 @@ func (a *App) getMenubar() *giu.MenuBarWidget {
 			}),
 			giu.Separator(),
 			giu.MenuItem("Zgłoś błąd").OnClick(func() {
-				if err := browser.OpenURL(bugURL); err != nil {
-					a.ReportError(err)
-				}
+				a.reportBug()
 			}),
 		),
 	)
