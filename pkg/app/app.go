@@ -231,9 +231,18 @@ func (a *App) renderMainView() {
 			}),
 		),
 		giu.Row(
-			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames).OnChange(a.playClickSound),
-			giu.Checkbox("W paragrafach", &a.searchOptions.paragraphs).OnChange(a.playClickSound),
-			giu.Checkbox("W treści", &a.searchOptions.text).OnChange(a.playClickSound),
+			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames).OnChange(func() {
+				a.playClickSound()
+				a.Research(a.searchPhrase)
+			}),
+			giu.Checkbox("W paragrafach", &a.searchOptions.paragraphs).OnChange(func() {
+				a.playClickSound()
+				a.Research(a.searchPhrase)
+			}),
+			giu.Checkbox("W treści", &a.searchOptions.text).OnChange(func() {
+				a.playClickSound()
+				a.Research(a.searchPhrase)
+			}),
 		),
 		giu.Label(""),
 		giu.Condition(len(a.rows) > 0,
