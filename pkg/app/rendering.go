@@ -22,7 +22,7 @@ func (a *App) render() {
 					giu.Custom(func() {
 						_, availableH := giu.GetAvailableRegion()
 						_, spacingH := giu.GetItemSpacing()
-						childH := availableH - spacingH*2 - buttonH
+						childH := availableH - spacingH*2 - aboutUsDialogueButtonH
 
 						giu.Child().Layout(
 							a.renderLogo(40),
@@ -32,9 +32,9 @@ func (a *App) render() {
 				),
 			giu.Separator(),
 			giu.Row(
-				giu.Button("Zgłoś błąd").OnClick(a.reportBug).Size(0, buttonH),
+				giu.Button("Zgłoś błąd").OnClick(a.reportBug).Size(0, aboutUsDialogueButtonH),
 				a.playClickSound(),
-				giu.Button("Zamknij").OnClick(a.aboutAppPopup.Close).Size(0, buttonH),
+				giu.Button("Zamknij").OnClick(a.aboutAppPopup.Close).Size(0, aboutUsDialogueButtonH),
 				a.playClickSound(),
 			),
 		),
@@ -67,12 +67,12 @@ func (a *App) getMenubar() *giu.MenuBarWidget {
 	)
 }
 
-func (a *App) renderLogo(procentage int) giu.Widget {
+func (a *App) renderLogo(percentageH int) giu.Widget {
 	return giu.Custom(func() {
 		availableW, availableH := giu.GetAvailableRegion()
 		spacingW, _ := giu.GetItemSpacing()
 		scale := float32(a.logo.h) / float32(a.logo.w)
-		maxLogoH := availableH * float32(procentage) / 100
+		maxLogoH := availableH * float32(percentageH) / 100
 		maxLogoW := availableW
 		var logoW, logoH, dummyW float32
 		if maxLogoW >= maxLogoH/scale {
@@ -97,11 +97,11 @@ func (a *App) renderLogo(procentage int) giu.Widget {
 func (a *App) renderMainView() {
 	availableW, _ := giu.GetAvailableRegion()
 	spacingW, _ := giu.GetItemSpacing()
-	searchFieldW := (availableW)*searchProcentage/100 - spacingW/2
+	searchFieldW := (availableW)*searchPercentage/100 - spacingW/2
 	searchButtonW := availableW - searchFieldW - spacingW/2
 
 	giu.Layout{
-		a.renderLogo(logoHProcentage),
+		a.renderLogo(logoHPercentage),
 		giu.Row(
 			giu.InputText(&a.searchPhrase).Size(searchFieldW).OnChange(func() {
 				a.Research(a.searchPhrase)

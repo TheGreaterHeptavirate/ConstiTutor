@@ -16,14 +16,18 @@ import (
 )
 
 const (
+	// sound player config (for oto)
 	channelCount    = 2
 	bitDepthInBytes = 2
 
+	// App config
 	windowTitle              = "Consti Tutor"
 	resolutionX, resolutionY = 800, 600
-	logoHProcentage          = 15
-	searchProcentage         = 80
-	aboutUsText              = `
+	logoHPercentage          = 15
+	searchPercentage         = 80
+
+	// about us dialogue
+	aboutUsText = `
 ConstiTutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
 
@@ -31,9 +35,9 @@ Wersja: v1.0
 Autor: [The Greater Heptavirate: programming lodge](https://github.com/TheGreaterHeptavirate)
 [Oficialna strona projektu](https://github.com/TheGreaterHeptavirate/ConstiTutor)
 `
-	projectURL = "https://github.com/TheGreaterHeptavirate/ConstiTutor"
-	bugURL     = "https://github.com/TheGreaterHeptavirate/ConstiTutor/issues/new"
-	buttonH    = 30
+	projectURL             = "https://github.com/TheGreaterHeptavirate/ConstiTutor"
+	bugURL                 = "https://github.com/TheGreaterHeptavirate/ConstiTutor/issues/new"
+	aboutUsDialogueButtonH = 30
 )
 
 type App struct {
