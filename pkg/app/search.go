@@ -63,3 +63,10 @@ func (a *App) getRuleFromIndex(i int) (actName string, rule *data.Rule) {
 		currentAct++
 	}
 }
+
+func (a *App) addRow(actName string, rule *data.Rule) {
+	a.rows = append(a.rows, giu.TableRow(
+		giu.Label(actName+" "+rule.Identifier),
+		giu.Label(rule.Text),
+	))
+}
