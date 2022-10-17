@@ -1,10 +1,11 @@
 package app
 
 import (
+	"strings"
+
 	"github.com/AllenDang/giu"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
 	"github.com/sahilm/fuzzy"
-	"strings"
 )
 
 // Research performs a fuzzy search on the given phrase and updates the search results.
@@ -16,23 +17,26 @@ func (a *App) Research(phrase string) {
 	}
 
 	a.rows = make([]*giu.TableRowWidget, 0)
-	//src := search(a.data)
+
 	src := make([]string, 0)
+
 	for _, act := range a.data {
 		for _, rule := range act.Rules {
-			new := ""
+			searchText := ""
+
 			if a.searchOptions.actNames {
-				new += act.ActName + " "
+				searchText += act.ActName + " "
 			}
+
 			if a.searchOptions.paragraphs {
-				new += rule.Identifier + " "
+				searchText += rule.Identifier + " "
 			}
 
 			if a.searchOptions.text {
-				new += rule.Text + " "
+				searchText += rule.Text + " "
 			}
 
-			src = append(src, new)
+			src = append(src, searchText)
 		}
 	}
 
@@ -40,7 +44,7 @@ func (a *App) Research(phrase string) {
 		for _, act := range a.data {
 			for _, rule := range act.Rules {
 				if phrase == "" || strings.Contains(rule.Text, phrase) {
-					a.addRow(act.ActName, &rule)
+					a.addRow(act.ActName, rule)
 				}
 			}
 		}
@@ -49,7 +53,7 @@ func (a *App) Research(phrase string) {
 	match := fuzzy.Find(phrase, src)
 	for _, m := range match {
 		actName, rule := a.getRuleFromIndex(m.Index)
-		a.addRow(actName, rule)
+		a.addRow(actName, *rule)
 	}
 }
 
@@ -64,7 +68,7 @@ func (a *App) getRuleFromIndex(i int) (actName string, rule *data.Rule) {
 	}
 }
 
-func (a *App) addRow(actName string, rule *data.Rule) {
+func (a *App) addRow(actName string, rule data.Rule) {
 	a.rows = append(a.rows, giu.TableRow(
 		giu.Label(actName+" "+rule.Identifier),
 		giu.Label(rule.Text),

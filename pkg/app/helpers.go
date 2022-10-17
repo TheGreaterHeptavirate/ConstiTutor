@@ -2,10 +2,11 @@ package app
 
 import (
 	"fmt"
-	"github.com/AllenDang/giu"
-	"github.com/pkg/browser"
 	"io"
 	"log"
+
+	"github.com/AllenDang/giu"
+	"github.com/pkg/browser"
 )
 
 // ReportError prints an error to the log and shows a message box in App.
@@ -33,6 +34,7 @@ func (a *App) playClickSound() giu.Widget {
 		}
 
 		if newPos != 0 {
+			//nolint:goerr113 // it's just for ReportError call
 			a.ReportError(fmt.Errorf("failed to seek to the beginning of the click sound"))
 		}
 

@@ -1,14 +1,16 @@
 package app
 
 import (
+	"image/color"
+
 	"github.com/AllenDang/giu"
 	"github.com/pkg/browser"
 	"golang.org/x/image/colornames"
-	"image/color"
 )
 
 func (a *App) render() {
 	aboutUs := aboutUsText
+
 	giu.SingleWindowWithMenuBar().Layout(
 		a.getMenubar(),
 		giu.Custom(func() {
@@ -89,7 +91,7 @@ func (a *App) renderLogo(percentageH int) giu.Widget {
 
 		giu.Row(
 			giu.Dummy(dummyW, 0),
-			giu.Image(a.logo.texture).Size(logoW, float32(logoH)),
+			giu.Image(a.logo.texture).Size(logoW, logoH),
 		).Build()
 	})
 }

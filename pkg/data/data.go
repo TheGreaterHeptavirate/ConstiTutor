@@ -1,20 +1,25 @@
+// Package data contains logic used for importing json data about
+// legal acts.
 package data
 
 import (
 	"encoding/json"
+	"fmt"
 	"path/filepath"
 	"strings"
 )
 
+// Load returns a list of legal act loaded from DATA directory.
 func Load() ([]*LegalAct, error) {
 	return loadDir(".")
 }
 
 func loadDir(dirname string) ([]*LegalAct, error) {
 	result := make([]*LegalAct, 0)
+
 	files, err := data.ReadDir(dirname)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("reading directory %s: %w", dirname, err)
 	}
 
 	for _, file := range files {
@@ -33,15 +38,18 @@ func loadDir(dirname string) ([]*LegalAct, error) {
 			continue
 		}
 
-		fileData, err := data.ReadFile(joinPath(dirname, file.Name()))
+		filename := joinPath(dirname, file.Name())
+
+		fileData, err := data.ReadFile(filename)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("reading file %s: %w", filename, err)
 		}
 
 		output := &LegalAct{}
+
 		err = json.Unmarshal(fileData, output)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("unmarshaling JSON: %w", err)
 		}
 
 		result = append(result, output)
@@ -50,7 +58,7 @@ func loadDir(dirname string) ([]*LegalAct, error) {
 	return result, nil
 }
 
-// LegalAct represents a set of Law rules (e.g. Konstytucja RP)
+// LegalAct represents a set of Law rules (e.g. Konstytucja RP).
 type LegalAct struct {
 	// ActName is a name of the Legal act (e.g. Konstytucja RP)
 	ActName string
@@ -59,6 +67,7 @@ type LegalAct struct {
 	Rules []Rule
 }
 
+// Rule represents a single rule from a LegalAct.
 type Rule struct {
 	// Identifier is a "index" of article/paragraph
 	// e.g.: "Rozdział 4, Artykuł 3, paragraf 7"
@@ -67,7 +76,7 @@ type Rule struct {
 	// Text is a text of the rule
 	Text string
 
-	// Links is a list to external resources. e.g. YouTube desctiption e.t.c.
+	// Links is a list to external resources. e.g. YouTube description e.t.c.
 	Links []string
 }
 

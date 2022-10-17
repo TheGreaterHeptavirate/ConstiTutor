@@ -1,13 +1,16 @@
+// Package app contains the main UI logic for ConstiTutor.
+// For stylesheet see internal/assets/css.
 package app
 
 import (
 	"bytes"
 	"fmt"
-	"github.com/hajimehoshi/oto/v2"
 	"image"
 	"image/png"
 	"log"
 	"runtime"
+
+	"github.com/hajimehoshi/oto/v2"
 
 	"github.com/AllenDang/giu"
 	"github.com/TheGreaterHeptavirate/ConstiTutor/internal/assets"
@@ -16,23 +19,23 @@ import (
 )
 
 const (
-	// sound player config (for oto)
+	// sound player config (for oto).
 	channelCount    = 2
 	bitDepthInBytes = 2
 
-	// App config
+	// App config.
 	windowTitle              = "Consti Tutor"
 	resolutionX, resolutionY = 800, 600
 	logoHPercentage          = 15
 	searchPercentage         = 80
 
-	// about us dialogue
+	// about us dialog.
 	aboutUsText = `
 ConstiTutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
 
 Wersja: v1.0
-Autor: [The Greater Heptavirate: programming lodge](https://github.com/TheGreaterHeptavirate)
+Author: [The Greater Heptavirate: programming lodge](https://github.com/TheGreaterHeptavirate)
 [Oficialna strona projektu](https://github.com/TheGreaterHeptavirate/ConstiTutor)
 `
 	projectURL             = "https://github.com/TheGreaterHeptavirate/ConstiTutor"
@@ -40,6 +43,9 @@ Autor: [The Greater Heptavirate: programming lodge](https://github.com/TheGreate
 	aboutUsDialogueButtonH = 30
 )
 
+// App represents a UI application
+// Create a new instance with New and run it with Run
+// NOTE! only one instance of an app could be active at once!
 type App struct {
 	window *giu.MasterWindow
 	data   []*data.LegalAct
@@ -61,6 +67,7 @@ type App struct {
 	clickSound    oto.Player
 }
 
+// New creates a new instance of an app.
 func New() (*App, error) {
 	d, err := data.Load()
 	if err != nil {
@@ -79,6 +86,9 @@ func New() (*App, error) {
 	return result, nil
 }
 
+// Run starts the app.
+// It'll hold program execution until the app is closed.
+// You can call it in goroutine and use channels to communicate with it.
 func (a *App) Run() {
 	// initialization
 	if err := a.InitializeSound(); err != nil {
@@ -117,15 +127,16 @@ func (a *App) Run() {
 	a.window.Run(a.render)
 }
 
+// InitializeSound initializes sound player (oto).
 func (a *App) InitializeSound() error {
 	mp3Data, err := mp3.NewDecoder(bytes.NewReader(assets.ClickSound))
 	if err != nil {
-		return err
+		return fmt.Errorf("decoding MP3 file data: %w", err)
 	}
 
 	c, ready, err := oto.NewContext(mp3Data.SampleRate(), channelCount, bitDepthInBytes)
 	if err != nil {
-		return err
+		return fmt.Errorf("creating oto context: %w", err)
 	}
 
 	<-ready

@@ -4,6 +4,8 @@ import (
 	"github.com/AllenDang/giu"
 )
 
+// PopupModal is a wrapper of giu.PopupModalWidget.
+// It makes it possible to use Open / Close methods.
 type PopupModal struct {
 	id          string
 	popup       *giu.PopupModalWidget
@@ -11,6 +13,7 @@ type PopupModal struct {
 	isOpen      bool
 }
 
+// NewPopupModal creates a new instance of PopupModal.
 func NewPopupModal(id string) *PopupModal {
 	return &PopupModal{
 		id:     id,
@@ -19,19 +22,24 @@ func NewPopupModal(id string) *PopupModal {
 	}
 }
 
+// Open opens the popup (if not opened).
 func (p *PopupModal) Open() {
 	p.isOpen = true
 }
 
+// Close closes the popup (if opened).
 func (p *PopupModal) Close() {
 	p.isOpen = false
 }
 
+// Layout sets popup's layout (wraps (*giu.PopupModalWidget).Layout.
 func (p *PopupModal) Layout(l ...giu.Widget) *PopupModal {
 	p.popup.Layout(l...)
+
 	return p
 }
 
+// Build implements giu.widget.
 func (p *PopupModal) Build() {
 	if !p.isOpen {
 		return
