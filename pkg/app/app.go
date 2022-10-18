@@ -24,7 +24,7 @@ const (
 	bitDepthInBytes = 2
 
 	// App config.
-	windowTitle              = "Consti Tutor"
+	windowTitle              = "ConstiTutor"
 	resolutionX, resolutionY = 800, 600
 	logoHPercentage          = 15
 	searchPercentage         = 80
