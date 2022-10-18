@@ -108,11 +108,15 @@ func (a *App) renderMainView() {
 			giu.InputText(&a.searchPhrase).Size(searchFieldW).OnChange(func() {
 				a.Research(a.searchPhrase)
 			}),
-			giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
-				a.Research(a.searchPhrase)
-			}),
-			a.playClickSound(),
+			giu.Layout{
+				giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
+					a.Research(a.searchPhrase)
+				}),
+				a.playClickSound(),
+			},
 		),
+		// workaround; see https://github.com/AllenDang/giu/issues/572
+		giu.Dummy(0, 0),
 		giu.Row(
 			giu.Checkbox("W nazwach aktów", &a.searchOptions.actNames).OnChange(func() {
 				a.Research(a.searchPhrase)
@@ -127,7 +131,8 @@ func (a *App) renderMainView() {
 			}),
 			a.playClickSound(),
 		),
-		giu.Label(""),
+		// workaround; see https://github.com/AllenDang/giu/issues/572
+		giu.Dummy(0, 0),
 		giu.Condition(len(a.rows) > 0,
 			giu.Layout{
 				giu.Child().Layout(
