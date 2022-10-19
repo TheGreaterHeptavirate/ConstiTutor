@@ -9,6 +9,15 @@ import (
 	"strings"
 )
 
+const (
+	commentMark    = '#'
+	actMark        = '$'
+	chapterMark    = '%'
+	subsectionMark = '@'
+	articleMark    = '&'
+	ruleMark       = '*'
+)
+
 // reader implements io.Reader and provides ReadLine method
 // which returns a line of text from the input file.
 type reader struct {
@@ -58,26 +67,27 @@ func main() {
 	}
 
 	var (
-		result   = &data.LegalAct{}
-		ruleText = ""
-		article  = ""
-		chapter  = ""
-		act      = ""
+		result     = &data.LegalAct{}
+		ruleText   = "" // *
+		article    = "" // &
+		subsection = "" // @
+		chapter    = "" // %
+		act        = "" // $
 
 		isBlockEnd = true
 	)
 
 	add := func() {
 		result.Rules = append(result.Rules, data.Rule{
-			Identifier: fmt.Sprintf("%s, %s", chapter, article),
+			Identifier: fmt.Sprintf("%s,%s, %s", chapter, subsection, article),
 			Text:       ruleText,
 		})
 
 		ruleText = ""
+		isBlockEnd = true
 	}
 
 	r := &reader{strings.NewReader(string(fileData))}
-	fmt.Println(err)
 
 	for line, err := r.ReadLine(); err == nil; line, err = r.ReadLine() {
 		if len(line) == 0 {
@@ -86,38 +96,52 @@ func main() {
 
 		firstChar := line[0]
 		val := line[1:]
+
 		switch firstChar {
-		case '#':
+		case commentMark:
 			continue
-		case '$':
+		case actMark:
 			if !isBlockEnd {
 				panic("more than one act in a file - not supported")
 			}
 
 			act += val
-		case '%':
+		case chapterMark:
+			if !isBlockEnd {
+				add()
+
+				chapter = ""
+				subsection = ""
+				article = ""
+			}
+
+			chapter += val + " "
+		case subsectionMark:
+			if !isBlockEnd {
+				add()
+
+				subsection = ""
+				article = ""
+			}
+
+			subsection += val + " "
+		case articleMark:
 			if !isBlockEnd {
 				add()
 
 				article = ""
 			}
 
-			chapter += val
-		case '&':
-			if !isBlockEnd {
-				add()
-			}
-
-			article += val
+			article += val + " "
 		case '*':
 			isBlockEnd = false
-			ruleText += val
+			ruleText += val + " "
 		}
 	}
 
 	result.ActName = act
 
-	output, err := json.Marshal(result)
+	output, err := json.MarshalIndent(result, "", "\t")
 	if err != nil {
 		panic(err)
 	}
