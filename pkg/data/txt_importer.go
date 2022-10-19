@@ -122,7 +122,7 @@ func ReadTxt(fileData []byte) (*LegalAct, error) {
 			}
 
 			article += val + "\n"
-		case '*':
+		case ruleMark:
 			isBlockEnd = false
 			ruleText += val + "\n"
 		}

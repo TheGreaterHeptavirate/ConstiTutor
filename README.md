@@ -14,27 +14,9 @@ Rzeczypospolitej Polskiej oraz innych aktach prawnych.
 
 ### TASKLIST
 
-- [ ] stworzenie bazy JSONowej dla ustaw (najpierw konstytucji, potem może też do innych ustaw)
+- [X] stworzenie bazy JSONowej dla ustaw (najpierw konstytucji, potem może też do innych ustaw)
 
-JSON powinien wyglądać jakoś tak:
-
-```json
-{
-        "ActName": "Prawo Dżungli",
-        "Rules": [
-                {
-                        "Identifier": "Zasada 1",
-                        "Text": "Kto pierwszy, ten lepszy",
-                        "Links": [
-                                "https://pkg.go.dev"
-                        ]
-                }
-        ]
-}
-```
-
-to może być zrobione w dowolnym języku (np. python) - liczy się format.
-Skrypt, jeżeli nie da się zintegrować z GO umieścić w folderze `scripts/`
+[więcej informacji](./pkg/data)
 
 - [X] system wejścia (pkg/core/data)
 
