@@ -147,7 +147,9 @@ func (a *App) renderMainView() {
 							giu.TableColumn("Paragraf").
 								Flags(giu.TableColumnFlagsWidthStretch).
 								InnerWidthOrWeight(.3),
-							giu.TableColumn("Treść"),
+							giu.TableColumn("Treść").
+								Flags(giu.TableColumnFlagsWidthStretch).
+								InnerWidthOrWeight(.7),
 						).
 						Rows(a.rows...),
 				),
