@@ -9,6 +9,12 @@ programistycznym [Hack Heroes](https://hackheroes.pl/)
 Aplikacja służy do wyszukiwania interesującej użydkownika frazy w Konstytucji
 Rzeczypospolitej Polskiej oraz innych aktach prawnych.
 
+## Akty prawne
+
+Obecnie, aplikacja pozwala na wyszukiwanie w następujących aktach prawnych:
+
+- Konstytucja Rzeczypospolitej Polskiej
+
 
 ## Design doc
 
