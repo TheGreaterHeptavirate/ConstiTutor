@@ -107,7 +107,7 @@ func (a *App) renderMainView() {
 		giu.Row(
 			giu.InputText(&a.searchPhrase).Size(searchFieldW).OnChange(func() {
 				a.Research(a.searchPhrase)
-			}),
+			}).Hint("Szukaj..."),
 			giu.Layout{
 				giu.Button("Szukaj").Size(searchButtonW, 0).OnClick(func() {
 					a.Research(a.searchPhrase)
