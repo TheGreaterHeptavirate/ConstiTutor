@@ -91,7 +91,9 @@ func (a *App) renderLogo(percentageH int) giu.Widget {
 
 		giu.Row(
 			giu.Dummy(dummyW, 0),
+			giu.Custom(a.logo.loadTextureMutex.Lock),
 			giu.Image(a.logo.texture).Size(logoW, logoH),
+			giu.Custom(a.logo.loadTextureMutex.Unlock),
 		).Build()
 	})
 }

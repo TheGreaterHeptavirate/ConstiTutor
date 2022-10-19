@@ -9,6 +9,7 @@ import (
 	"image/png"
 	"log"
 	"runtime"
+	"sync"
 
 	"github.com/hajimehoshi/oto/v2"
 
@@ -53,8 +54,9 @@ type App struct {
 	searchPhrase string
 	rows         []*giu.TableRowWidget
 	logo         struct {
-		w, h    int
-		texture *giu.Texture
+		w, h             int
+		texture          *giu.Texture
+		loadTextureMutex *sync.Mutex
 	}
 
 	searchOptions struct {
@@ -82,6 +84,7 @@ func New() (*App, error) {
 	}
 
 	result.searchOptions.text = true
+	result.logo.loadTextureMutex = &sync.Mutex{}
 
 	return result, nil
 }
@@ -118,7 +121,9 @@ func (a *App) Run() {
 	}
 
 	giu.EnqueueNewTextureFromRgba(logo, func(t *giu.Texture) {
+		a.logo.loadTextureMutex.Lock()
 		a.logo.texture = t
+		a.logo.loadTextureMutex.Unlock()
 	})
 
 	a.logo.w, a.logo.h = logo.Bounds().Dx(), logo.Bounds().Dy()
