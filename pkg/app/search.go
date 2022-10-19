@@ -44,7 +44,7 @@ func (a *App) Research(phrase string) {
 		for _, act := range a.data {
 			for _, rule := range act.Rules {
 				if phrase == "" || strings.Contains(rule.Text, phrase) {
-					a.addRow(act.ActName, rule)
+					a.addRow("", rule)
 				}
 			}
 		}
@@ -70,7 +70,7 @@ func (a *App) getRuleFromIndex(i int) (actName string, rule *data.Rule) {
 
 func (a *App) addRow(actName string, rule data.Rule) {
 	a.rows = append(a.rows, giu.TableRow(
-		giu.Label(actName+" "+rule.Identifier),
-		giu.Label(rule.Text),
+		giu.Label(actName+" "+rule.Identifier).Wrapped(true),
+		giu.Label(rule.Text).Wrapped(true),
 	))
 }

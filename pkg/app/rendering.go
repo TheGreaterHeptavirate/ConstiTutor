@@ -138,8 +138,10 @@ func (a *App) renderMainView() {
 				giu.Child().Layout(
 					giu.Table().Flags(
 						giu.TableFlagsScrollY|
+							giu.TableFlagsScrollX|
 							giu.TableFlagsBordersInner|
-							giu.TableFlagsBordersInnerH,
+							giu.TableFlagsBordersInnerH|
+							giu.TableFlagsResizable,
 					).
 						Columns(
 							giu.TableColumn("Paragraf").

@@ -59,6 +59,7 @@ func (r *reader) ReadLine() (string, error) {
 // The function prints out the json input of data.LegalAct
 func main() {
 	infile := flag.String("i", "konstytucjaRP.txt", "input file")
+	outfile := flag.String("o", "konstytucjaRP.json", "output file")
 	flag.Parse()
 
 	fileData, err := os.ReadFile(*infile)
@@ -115,7 +116,7 @@ func main() {
 				article = ""
 			}
 
-			chapter += val + " "
+			chapter += val + "\n"
 		case subsectionMark:
 			if !isBlockEnd {
 				add()
@@ -124,7 +125,7 @@ func main() {
 				article = ""
 			}
 
-			subsection += val + " "
+			subsection += val + "\n"
 		case articleMark:
 			if !isBlockEnd {
 				add()
@@ -132,10 +133,10 @@ func main() {
 				article = ""
 			}
 
-			article += val + " "
+			article += val + "\n"
 		case '*':
 			isBlockEnd = false
-			ruleText += val + " "
+			ruleText += val + "\n"
 		}
 	}
 
@@ -146,5 +147,8 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(string(output))
+	err = os.WriteFile(*outfile, output, 0644)
+	if err != nil {
+		panic(err)
+	}
 }
