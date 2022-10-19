@@ -4,6 +4,9 @@ folder `DATA` zawiera zestaw danych obsługiwanych przez dekoder.
 
 Obsługujemy następujące formaty:
 
+- [json](#JSON)
+- [specjalny format txt](#TXT)
+
 ## JSON
 
 pliki z rozszerzeniem `.json` będą konwertowane za pomocą biblioteki
