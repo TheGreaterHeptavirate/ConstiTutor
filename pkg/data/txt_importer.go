@@ -1,11 +1,8 @@
-package main
+package data
 
 import (
-	"encoding/json"
-	"flag"
+	"errors"
 	"fmt"
-	"github.com/TheGreaterHeptavirate/ConstiTutor/pkg/data"
-	"os"
 	"strings"
 )
 
@@ -57,18 +54,9 @@ func (r *reader) ReadLine() (string, error) {
 // the text of the rule starts with * character.
 //
 // The function prints out the json input of data.LegalAct
-func main() {
-	infile := flag.String("i", "konstytucjaRP.txt", "input file")
-	outfile := flag.String("o", "konstytucjaRP.json", "output file")
-	flag.Parse()
-
-	fileData, err := os.ReadFile(*infile)
-	if err != nil {
-		panic(err)
-	}
-
+func ReadTxt(fileData []byte) (*LegalAct, error) {
 	var (
-		result     = &data.LegalAct{}
+		result     = &LegalAct{}
 		ruleText   = "" // *
 		article    = "" // &
 		subsection = "" // @
@@ -79,7 +67,7 @@ func main() {
 	)
 
 	add := func() {
-		result.Rules = append(result.Rules, data.Rule{
+		result.Rules = append(result.Rules, Rule{
 			Identifier: fmt.Sprintf("%s,%s, %s", chapter, subsection, article),
 			Text:       ruleText,
 		})
@@ -103,7 +91,7 @@ func main() {
 			continue
 		case actMark:
 			if !isBlockEnd {
-				panic("more than one act in a file - not supported")
+				return nil, errors.New("more than one act in a file - not supported")
 			}
 
 			act += val
@@ -142,13 +130,5 @@ func main() {
 
 	result.ActName = act
 
-	output, err := json.MarshalIndent(result, "", "\t")
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.WriteFile(*outfile, output, 0644)
-	if err != nil {
-		panic(err)
-	}
+	return result, nil
 }

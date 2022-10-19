@@ -34,10 +34,6 @@ func loadDir(dirname string) ([]*LegalAct, error) {
 			continue
 		}
 
-		if filepath.Ext(file.Name()) != ".json" {
-			continue
-		}
-
 		filename := joinPath(dirname, file.Name())
 
 		fileData, err := data.ReadFile(filename)
@@ -47,9 +43,14 @@ func loadDir(dirname string) ([]*LegalAct, error) {
 
 		output := &LegalAct{}
 
-		err = json.Unmarshal(fileData, output)
-		if err != nil {
-			return nil, fmt.Errorf("unmarshaling JSON: %w", err)
+		switch filepath.Ext(file.Name()) {
+		case ".json":
+			err = json.Unmarshal(fileData, output)
+			if err != nil {
+				return nil, fmt.Errorf("unmarshaling JSON: %w", err)
+			}
+		case ".txt":
+			output, err = ReadTxt(fileData)
 		}
 
 		result = append(result, output)
