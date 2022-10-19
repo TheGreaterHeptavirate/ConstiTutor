@@ -44,7 +44,7 @@ func (a *App) Research(phrase string) {
 		for _, act := range a.data {
 			for _, rule := range act.Rules {
 				if phrase == "" || strings.Contains(rule.Text, phrase) {
-					a.addRow("", rule)
+					a.addRow(rule)
 				}
 			}
 		}
@@ -52,8 +52,8 @@ func (a *App) Research(phrase string) {
 
 	match := fuzzy.Find(phrase, src)
 	for _, m := range match {
-		actName, rule := a.getRuleFromIndex(m.Index)
-		a.addRow(actName, *rule)
+		_, rule := a.getRuleFromIndex(m.Index)
+		a.addRow(*rule)
 	}
 }
 
@@ -68,9 +68,9 @@ func (a *App) getRuleFromIndex(i int) (actName string, rule *data.Rule) {
 	}
 }
 
-func (a *App) addRow(actName string, rule data.Rule) {
+func (a *App) addRow(rule data.Rule) {
 	a.rows = append(a.rows, giu.TableRow(
-		giu.Label(actName+" "+rule.Identifier).Wrapped(true),
+		giu.Label(rule.Identifier).Wrapped(true),
 		giu.Label(rule.Text).Wrapped(true),
 	))
 }
