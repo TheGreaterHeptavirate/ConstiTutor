@@ -15,6 +15,28 @@ Obecnie, aplikacja pozwala na wyszukiwanie w następujących aktach prawnych:
 
 - Konstytucja Rzeczypospolitej Polskiej
 
+## Instrukacja instalacji
+
+aby uruchomić program musisz zainstalować kilka komponentów:
+1. [golang](https://go.dev)
+2. Przejdź do strony frameworku [giu](https://github.com/TheGreaterHeptavirate/giu/tree/constitutor#install)
+   i zainstaluj wymagane aplikacje
+3. zainstaluj zależności wymagane do uruchomienia [oto](https://github.com/hajimehoshi/oto#prerequisite)
+4. pobierz kod źródłowy:
+```sh
+git clone https://github.com/TheGreaterHeptavirate/constitutor
+```
+5. W konsoli wejdź do katalogu projektu i zainstaluj zależności
+```sh
+cd constitutor
+go get -d ./...
+```
+
+teraz, aby uruchomić program wystarczy wykonać następującą komendę:
+
+```sh
+go run cmd/constitutor/main.go
+```
 
 ## Design doc
 
