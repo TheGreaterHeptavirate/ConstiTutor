@@ -2,7 +2,6 @@ package data
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -67,8 +66,20 @@ func ReadTxt(fileData []byte) (*LegalAct, error) {
 	)
 
 	add := func() {
+		identifier := ""
+
+		if chapter != "" {
+			identifier += strings.Replace(chapter, "\n", ", ", len(chapter)-1)
+		}
+
+		if subsection != "" {
+			identifier += strings.Replace(subsection, "\n", ", ", len(chapter)-1)
+		}
+
+		identifier += article
+
 		result.Rules = append(result.Rules, Rule{
-			Identifier: fmt.Sprintf("%s,%s, %s", chapter, subsection, article),
+			Identifier: identifier,
 			Text:       ruleText,
 		})
 
