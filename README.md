@@ -38,6 +38,17 @@ teraz, aby uruchomić program wystarczy wykonać następującą komendę:
 go run cmd/constitutor/main.go
 ```
 
+Na systemie operacyjnym Linux możesz również spróbować użyć
+komendy `make`. Obsługiwane komendy:
+- `make setup`
+- `make build`
+- `make run`
+- `make test` - uruchomienie testów jednostkowych (unit testów)
+- `make cover` - utworzenie raportu o skuteczności testów jednostkowych
+- `make clean`
+- `make help`
+
+
 ## Design doc
 
 ### TASKLIST

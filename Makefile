@@ -14,11 +14,11 @@ TARGET := $(shell echo $${PWD-`pwd`})
 
 .PHONY: all build setup test cover clean run help
 
-## all: Default target, now is build
+## all: Default target, setup and build
 all: build
 
 ## build: Builds the binary
-build:
+build: setup
 	@echo "files will be saved in build/"
 	@mkdir -p build
 	@echo "Building..."
@@ -67,7 +67,7 @@ clean:
 
 ## run: Runs go run
 run: build
-	@$(GOCMD) run ${TARGET}
+	@./build/constitutor.bin
 
 ## help: Prints this help message
 help:
