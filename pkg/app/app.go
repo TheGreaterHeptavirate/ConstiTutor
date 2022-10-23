@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022. The Greater Heptavirate (https://github.com/TheGreaterHeptavirate). All Rights Reservet
+ *
+ * All copies of this software (if not stated otherway) are dedicated
+ * ONLY to personal, non-commercial use.
+ */
+
 // Package app contains the main UI logic for ConstiTutor.
 // For stylesheet see internal/assets/css.
 package app

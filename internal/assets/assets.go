@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2022. The Greater Heptavirate (https://github.com/TheGreaterHeptavirate). All Rights Reservet
+ *
+ * All copies of this software (if not stated otherway) are dedicated
+ * ONLY to personal, non-commercial use.
+ */
+
 // Package assets uses go:embed to embed asset into the binary
 // and shares it with other packages.
 package assets
