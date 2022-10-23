@@ -114,6 +114,7 @@ func (a *App) Run() {
 
 	a.window.SetIcon([]image.Image{icon})
 
+	a.initializeFonts()
 	// load logo image
 	logo, err := png.Decode(bytes.NewReader(assets.Logo))
 	if err != nil {
@@ -150,6 +151,10 @@ func (a *App) InitializeSound() error {
 	runtime.KeepAlive(a.clickSound)
 
 	return nil
+}
+
+func (a *App) initializeFonts() {
+	giu.Context.FontAtlas.SetDefaultFontFromBytes(assets.TimesNewRoman, 14)
 }
 
 func (a *App) registerShortcuts() {

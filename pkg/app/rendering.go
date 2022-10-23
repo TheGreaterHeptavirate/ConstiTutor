@@ -155,6 +155,7 @@ func (a *App) renderMainView() {
 								Flags(giu.TableColumnFlagsWidthStretch).
 								InnerWidthOrWeight(.7),
 						).
+						Freeze(0, 1).
 						Rows(a.rows...),
 				),
 			},

@@ -23,3 +23,11 @@ var (
 //
 //go:embed sounds/click.mp3
 var ClickSound []byte
+
+// fonts:
+var (
+	//go:embed fonts/times_new_roman/times_new_roman.ttf
+	TimesNewRoman []byte
+	//go:embed fonts/times_new_roman/times_new_roman_bold.ttf
+	TimesNewRomanBold []byte
+)
