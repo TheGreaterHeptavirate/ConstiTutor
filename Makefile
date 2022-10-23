@@ -25,10 +25,13 @@ build:
 	@echo "Building - linux..."
 	@CGO_ENABLED="1" GOOS="linux" $(GOCMD) build -o build/constitutor.bin cmd/constitutor/main.go
 	@echo "Building - windows..."
+	@cp cmd/constitutor/*syso .
 	@CGO_ENABLED="1" GOOS="windows" CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ \
 		HOST=x86_64-w64-mingw32 \
 		$(GOCMD) build -ldflags "-s -w -H=windowsgui -extldflags=-static" \
-		-o build/constitutor.exe cmd/constitutor/main.go
+		-o build/constitutor.exe ./cmd/constitutor
+	@rm *.syso
+	@cd ../../
 
 ## setup: Runs mod download and generate
 setup:
@@ -45,6 +48,8 @@ setup:
 	@$(GOCMD) get -d ./...
 	@$(GOCMD) mod download -x
 	@$(GOCMD) generate -v ./...
+	#generate specific windows stuff
+	@GOOS=windows $(GOCMD) generate -v ./...
 
 ## test: Runs the tests with coverage
 test:

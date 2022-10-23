@@ -1,6 +1,6 @@
 // goversioninfo is https://github.com/josephspurrier/goversioninfo/
 //
-//go:generate goversioninfo -icon=icon.ico -platform-specific=true
+// //go:generate goversioninfo -icon=icon.ico -platform-specific=true
 package main
 
 import (

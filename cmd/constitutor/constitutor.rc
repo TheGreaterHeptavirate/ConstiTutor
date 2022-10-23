@@ -1,0 +1,2 @@
+id ICON "./icon.ico"
+GLFW_ICON ICON "./icon.ico"
