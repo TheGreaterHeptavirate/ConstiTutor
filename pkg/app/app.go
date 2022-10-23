@@ -35,7 +35,7 @@ const (
 ConstiTutor to program służący do wyszukiwania interesujących Cię
 aktów prawnych w Konstytucji Rzeczypospolitej Polskiej i innych ustawach.
 
-Wersja: v1.0
+Wersja: v1.1
 Autorzy: [The Greater Heptavirate: programming lodge](https://github.com/TheGreaterHeptavirate)
 [Oficialna strona projektu](https://github.com/TheGreaterHeptavirate/ConstiTutor)
 `
