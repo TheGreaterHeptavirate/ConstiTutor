@@ -1,3 +1,17 @@
+# NOTE 
+<image align="left" src="https://user-images.githubusercontent.com/242652/138285004-b27d55b3-163b-4fe3-a8ff-6c34518044bd.png">
+Dear Users/visitors
+Since the fact that at december 2022 HackHeroes has finished, and the project didn't win anything,
+as well as because of lack of interesst in further development,
+We've decided to announce its end-of-life.
+If you're interessted in resuming the development anyhow, feel free to
+contact us for details.
+
+Thanx!
+gucio321 <gucio321@users.noreply.github.com> - the Head Developer.
+<br clear="all" />
+
+
 <p align="center">
 <a href="https://hackheroes.pl"><img src="https://hackheroes.pl/img/rsz_hackheroes_logo.png"></a>
 <img src="internal/assets/icons/logo.png">
